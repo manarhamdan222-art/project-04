@@ -40,12 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const photos = [
         {
-            src: "assets/profile.jpg",
+            src: "assets/profile1.jpg",
             enAlt: "Manar Hamdan - First profile photo",
             arAlt: "منار حمدان - الصورة الشخصية الأولى"
         },
         {
-            src: "assets/profile1.jpg",
+            src: "assets/profile2.jpg",
             enAlt: "Manar Hamdan - Second profile photo",
             arAlt: "منار حمدان - الصورة الشخصية الثانية"
         }

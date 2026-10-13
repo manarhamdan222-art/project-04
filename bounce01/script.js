@@ -1,108 +1,116 @@
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
 
-    // =====================================
+    // ===================================
     // Dark / Light Mode
-    // =====================================
+    // ===================================
 
-    const themeBtn = document.getElementById("theme-toggle");
+    const themeBtn = document.getElementById('theme-btn');
 
     if (themeBtn) {
-        themeBtn.addEventListener("click", () => {
+        themeBtn.addEventListener('click', () => {
 
-            const isDark =
-                document.documentElement.getAttribute("data-theme") === "dark";
+            const dark =
+                document.documentElement.getAttribute('data-theme') === 'dark';
 
-            const newTheme = isDark ? "light" : "dark";
+            document.documentElement.setAttribute(
+                'data-theme',
+                dark ? 'light' : 'dark'
+            );
 
-            document.documentElement.setAttribute("data-theme", newTheme);
-
-            themeBtn.textContent = newTheme === "dark" ? "☀️" : "🌙";
+            themeBtn.textContent = dark ? '🌙' : '☀️';
 
             themeBtn.setAttribute(
-                "aria-label",
-                newTheme === "dark"
-                    ? "Switch to light mode"
-                    : "Switch to dark mode"
+                'aria-label',
+                dark ? 'Switch to dark mode' : 'Switch to light mode'
             );
         });
     }
 
-    // =====================================
-    // Profile Photo Switcher - Bounce 01
-    // =====================================
+    // ===================================
+    // Bounce 01 - Profile Photo Switcher
+    // ===================================
 
-    const profilePhoto = document.getElementById("profile-photo");
-    const photoSwitcher = document.getElementById("photo-switcher");
+    const photo = document.getElementById('profile-photo');
+    const photoBtn = document.getElementById('photo-switcher');
 
-    if (profilePhoto && photoSwitcher) {
+    const photos = [
+        {
+            src: 'assets/profile1.jpg',
+            alt: 'Manar Hamdan - first profile photo'
+        },
+        {
+            src: 'assets/profile2.jpg',
+            alt: 'Manar Hamdan - second profile photo'
+        }
+    ];
 
-        const photos = [
-            {
-                src: "assets/profile.jpg",
-                alt: "Manar Hamdan - First profile photo"
-            },
-            {
-                src: "assets/profile1.jpg",
-                alt: "Manar Hamdan - Second profile photo"
-            }
-        ];
+    let photoIndex = 0;
 
-        let currentPhoto = 0;
-        let isSwitching = false;
+    if (photo && photoBtn) {
 
-        photoSwitcher.addEventListener("click", () => {
+        photoBtn.addEventListener('click', () => {
 
-            if (isSwitching) return;
+            if (photoBtn.disabled) return;
 
-            isSwitching = true;
+            photoBtn.disabled = true;
 
-            const nextIndex = (currentPhoto + 1) % photos.length;
-            const nextPhoto = photos[nextIndex];
+            const nextIndex = (photoIndex + 1) % photos.length;
+            const next = photos[nextIndex];
 
-            const preloadedImage = new Image();
+            // Preload the next photo
+            const preload = new Image();
 
-            preloadedImage.onload = () => {
+            preload.onload = () => {
+
+                // Fade out the current photo
+                photo.classList.add('fade-out');
 
                 const reducedMotion = window.matchMedia(
-                    "(prefers-reduced-motion: reduce)"
+                    '(prefers-reduced-motion: reduce)'
                 ).matches;
-
-                if (!reducedMotion) {
-                    profilePhoto.classList.add("fade-out");
-                }
 
                 setTimeout(() => {
 
-                    profilePhoto.src = nextPhoto.src;
-                    profilePhoto.alt = nextPhoto.alt;
+                    // Update image source and alt text
+                    photo.src = next.src;
+                    photo.alt = next.alt;
 
-                    currentPhoto = nextIndex;
+                    photoIndex = nextIndex;
 
-                    profilePhoto.classList.remove("fade-out");
-                    isSwitching = false;
+                    // Fade in the new photo
+                    requestAnimationFrame(() => {
+                        photo.classList.remove('fade-out');
+                        photoBtn.disabled = false;
+                    });
 
                 }, reducedMotion ? 0 : 300);
             };
 
-            preloadedImage.onerror = () => {
-                console.error("Could not load image:", nextPhoto.src);
-                isSwitching = false;
+            preload.onerror = () => {
+                photoBtn.disabled = false;
+                console.error('Image not found:', next.src);
             };
 
-            preloadedImage.src = nextPhoto.src;
+            preload.src = next.src;
         });
     }
 
-    // =====================================
+    // ===================================
     // Contact Form Demo
-    // =====================================
+    // ===================================
 
-    const contactForm = document.querySelector(".contact-form");
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('form-status');
 
-    if (contactForm) {
-        contactForm.addEventListener("submit", (event) => {
+    if (form && status) {
+        form.addEventListener('submit', (event) => {
+
             event.preventDefault();
+
+            status.textContent =
+                'Demo form only: no message was sent. ' +
+                'Please use the email link to get in touch.';
         });
     }
 
